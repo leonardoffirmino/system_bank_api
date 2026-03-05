@@ -4,7 +4,7 @@ from src.models.sqlite.entities.pessoa_fisica import PessoaFisicaTable
 class PessoaFisicaRepositoryInterface(ABC):
 
     @abstractmethod
-    def create_person(self, renda_mensal: float,age: int, name:str, phone:str,category:str, balance:float):
+    def create_person(self, renda_mensal: float,idade: int, nome_completo:str, celular:str,categoria:str, saldo:float):
         pass
     
     @abstractmethod

@@ -8,5 +8,5 @@ class PessoaJuridicaRepositoryInterface(ABC):
         pass
     
     @abstractmethod
-    def create_person(self, name_company: str, fantasy_name:str, cnpj:str, email:str,limit_withdraw:float):
+    def create_person(self, razao_social: str, nome_fantasia:str, cnpj:str, email:str, limit_saque:float):
         pass
