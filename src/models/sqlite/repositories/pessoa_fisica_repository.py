@@ -1,7 +1,7 @@
 from sqlalchemy.orm import NoResultFound
 from src.models.sqlite.interfaces.pessoa_fisica_repository import PessoaFisicaRepositoryInterface
 from src.models.sqlite.entities.pessoa_fisica import PessoaFisicaTable
-from src.models.sqlite.interfaces.cliente_repository import ClienteRepositoryInterface
+
 
 class PessoaFisicaRepository(PessoaFisicaRepositoryInterface):
       def __init__(self, db_connection) -> None:
@@ -15,7 +15,53 @@ class PessoaFisicaRepository(PessoaFisicaRepositoryInterface):
            except NoResultFound:
               return []
            
-      def create_person(self, renda_mensal:float, age:int, name:str,phone:str,category:str, balance:float):
-         pass
+      def create_person(self, renda_mensal:float, idade:int, nome_completo:str,celular:str,categoria:str, saldo:float) -> None:
+         with self.__db_connection() as database:
+            try:
+               person_data = PessoaFisicaTable(
+                  renda_mensal=renda_mensal,
+                  idade=idade,
+                  nome_completo=nome_completo,
+                  celular=celular,
+                  categoria=categoria,
+                  saldo=saldo
+               )
+               database.session.add(person_data)
+               database.session.commit()
+            except Exception as expcetion:
+               database.session.rollback()
+               raise expcetion
+
+      def get_person(self, client_id: int) -> None:
+         with self.__db_connection() as database:
+            try:
+               person = (database.session
+                        .query(PessoaFisicaTable)
+                        .filter(PessoaFisicaTable.id == client_id)
+                        .first())
+               return person
+            except NoResultFound:
+               return None
+
+      def update_saldo(self, client_id: int, saldo: float) -> PessoaFisicaTable | None:
+         with self.__db_connection() as database:
+            try:
+               person = (database.session
+                        .query(PessoaFisicaTable)
+                        .filter(PessoaFisicaTable.id == client_id)
+                        .first())
+
+               if person is None:
+                  return None
+
+               person.saldo = saldo
+               database.session.commit()
+               database.session.refresh(person)
+               return person
+            except Exception as exception:
+               database.session.rollback()
+               raise exception
+
+      
            
       

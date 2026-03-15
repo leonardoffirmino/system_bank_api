@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class ClienteRepositoryInterface(ABC):
+class Cliente(ABC):
 
     @abstractmethod
     def sacar(self, value: float):

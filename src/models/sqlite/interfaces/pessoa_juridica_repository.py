@@ -10,3 +10,11 @@ class PessoaJuridicaRepositoryInterface(ABC):
     @abstractmethod
     def create_person(self, razao_social: str, nome_fantasia:str, cnpj:str, email:str, limit_saque:float):
         pass
+
+    @abstractmethod
+    def get_person(self, client_id: int) -> PessoaJuridicaTable | None:
+        pass
+
+    @abstractmethod
+    def update_saldo(self, client_id: int, saldo: float) -> PessoaJuridicaTable | None:
+        pass
