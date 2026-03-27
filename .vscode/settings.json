@@ -10,4 +10,5 @@
   },
   "python-envs.pythonProjects": [],
   "python.REPL.enableREPLSmartSend": false,
+  "chatgpt.openOnStartup": false,
 }

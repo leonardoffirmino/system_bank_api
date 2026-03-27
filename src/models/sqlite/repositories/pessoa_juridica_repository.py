@@ -1,5 +1,5 @@
-from sqlalchemy.exc import NoResultFound
-from src.models.sqlite.repositories.pessoa_juridica_repository import PessoaJuridicaRepositoryInterface
+from sqlalchemy.orm import NoResultFound
+from src.models.sqlite.interfaces.pessoa_juridica_repository import PessoaJuridicaRepositoryInterface
 from src.models.sqlite.entities.pessoa_juridica import PessoaJuridicaTable
 
 

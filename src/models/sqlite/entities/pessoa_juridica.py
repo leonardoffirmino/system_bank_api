@@ -13,6 +13,7 @@ class PessoaJuridicaTable(Base):
     cnpj = Column(String(18),nullable=False,unique=True)
     email = Column(String(255),nullable=False)
     limit_saque = Column(Float,nullable=False)
+    saldo = Column(Float, nullable=False, default=0.0)
 
     def __repr__(self):
         return f"PessoaJuridica(id={self.id}, name_company='{self.razao_social}', fantasy_name='{self.nome_fantasia}', cnpj='{self.cnpj}', email='{self.email}', limit_saque={self.limit_saque})"
