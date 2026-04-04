@@ -22,6 +22,8 @@ class MockConnection:
 
     def __enter__(self): return self
     def __exit__(self, exc_type, exc_val, exc_tb): pass
+    def __call__(self):
+        return self
 
 
 class MockConnectionNoResult:
@@ -34,6 +36,8 @@ class MockConnectionNoResult:
 
     def __enter__(self): return self
     def __exit__(self, exc_type, exc_val, exc_tb): pass
+    def __call__(self):
+        return self
 
 
 def test_list_people():
@@ -74,7 +78,7 @@ def test_update_saldo_success():
     session = mock.Mock()
     person = PessoaJuridicaTable(razao_social="X", nome_fantasia="X", cnpj="11.11", email="e@e.com", limit_saque=1000.0, saldo=100.0)
     session.query.return_value.filter.return_value.first.return_value = person
-    conn = mock.Mock()
+    conn = mock.MagicMock()
     conn.__enter__.return_value = conn
     conn.session = session
 

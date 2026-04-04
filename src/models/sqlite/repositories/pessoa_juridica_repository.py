@@ -1,4 +1,4 @@
-from sqlalchemy.orm import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound
 from src.models.sqlite.interfaces.pessoa_juridica_repository import PessoaJuridicaRepositoryInterface
 from src.models.sqlite.entities.pessoa_juridica import PessoaJuridicaTable
 
@@ -42,11 +42,55 @@ class PessoaJuridicaRepository(PessoaJuridicaRepositoryInterface):
       def update_saldo(self,cliente_id: int, novo_saldo: float) -> PessoaJuridicaTable | None:
           with self.__db_connection() as database:
               try:
-                  person = self.get_person(cliente_id)
-                  if person:
-                      person.saldo = novo_saldo
-                      database.session.commit()
+                  person = (database.session
+                           .query(PessoaJuridicaTable)
+                           .filter(PessoaJuridicaTable.id == cliente_id)
+                           .first())
+
+                  if person is None:
+                      return None
+
+                  person.saldo = novo_saldo
+                  database.session.commit()
+                  database.session.refresh(person)
                   return person
               except Exception as exception:
                   database.session.rollback()
+                  raise exception
+
+      def sacar(self,cliente_id: int, valor: float) -> PessoaJuridicaTable | None:
+          with self.__db_connection() as database:
+              try:
+                  person = (database.session
+                           .query(PessoaJuridicaTable)
+                           .filter(PessoaJuridicaTable.id == cliente_id)
+                           .first())
+
+                  if person is None:
+                      return None
+
+                  person.sacar(valor)
+                  database.session.commit()
+                  database.session.refresh(person)
+                  return person
+              except Exception as exception:
+                  database.session.rollback()
+                  raise exception
+
+      def extrato(self, cliente_id: int) -> dict | None:
+          with self.__db_connection() as database:
+              try:
+                  person = (database.session
+                           .query(PessoaJuridicaTable)
+                           .filter(PessoaJuridicaTable.id == cliente_id)
+                           .first())
+
+                  if person is None:
+                      return None
+
+                  return {
+                      "account": person.extrato(),
+                      "transactions": [],
+                  }
+              except Exception as exception:
                   raise exception

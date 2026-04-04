@@ -1,6 +1,6 @@
-from src.models.sqlite.settings.base import Base
 from sqlalchemy import Column, Integer, String, Float
-from src.models.sqlite.interfaces.cliente_repository import Cliente
+
+from src.models.sqlite.settings.base import Base
 
 class PessoaJuridicaTable(Base):
     __tablename__ = "pessoa_juridica"
@@ -26,7 +26,10 @@ class PessoaJuridicaTable(Base):
             raise ValueError(f"O valor de saque excede o limite permitido de {self.__limite_saque__}.")
         
         if valor > self.saldo:
-            raise ValueError("Saldo insuficiente para realizar o saque.")                                       
+            raise ValueError("Saldo insuficiente para realizar o saque.")
+
+        self.saldo -= valor
+        return self.saldo
         
     def extrato(self):
         return {

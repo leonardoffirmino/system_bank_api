@@ -1,0 +1,19 @@
+from src.controllers.pessoa_juridica.pessoa_juridica_controller import PessoaJuridicaController
+from src.models.sqlite.repositories.pessoa_juridica_repository import PessoaJuridicaRepository
+from src.models.sqlite.settings.connection import db_connection_handler
+from src.views.pessoa_juridica_creator_view import PessoaJuridicaCreatorView
+from src.views.pessoa_juridica_finder_view import PessoaJuridicaFinderView
+from src.views.pessoa_juridica_list_view import PessoaJuridicaListView
+from src.views.pessoa_juridica_saldo_updater_view import PessoaJuridicaSaldoUpdaterView
+from src.views.pessoa_juridica_statement_view import PessoaJuridicaStatementView
+from src.views.pessoa_juridica_withdraw_view import PessoaJuridicaWithdrawView
+
+repository = PessoaJuridicaRepository(db_connection_handler)
+controller = PessoaJuridicaController(repository)
+
+pessoa_juridica_list_view = PessoaJuridicaListView(controller)
+pessoa_juridica_creator_view = PessoaJuridicaCreatorView(controller)
+pessoa_juridica_finder_view = PessoaJuridicaFinderView(controller)
+pessoa_juridica_saldo_updater_view = PessoaJuridicaSaldoUpdaterView(controller)
+pessoa_juridica_statement_view = PessoaJuridicaStatementView(controller)
+pessoa_juridica_withdraw_view = PessoaJuridicaWithdrawView(controller)

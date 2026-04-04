@@ -1,8 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float
 from src.models.sqlite.settings.base import Base
-from src.models.sqlite.interfaces.cliente_repository import Cliente
 
-class PessoaFisicaTable(Base, Cliente):
+class PessoaFisicaTable(Base):
     __tablename__ = "pessoa_fisica"
 
     __limite_saque__ = 1000.00

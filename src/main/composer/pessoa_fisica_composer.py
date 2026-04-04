@@ -1,0 +1,19 @@
+from src.controllers.pessoa_fisica.pessoa_fisica_controller import PessoaFisicaController
+from src.models.sqlite.repositories.pessoa_fisica_repository import PessoaFisicaRepository
+from src.models.sqlite.settings.connection import db_connection_handler
+from src.views.pessoa_fisica_creator_view import PessoaFisicaCreatorView
+from src.views.pessoa_fisica_finder_view import PessoaFisicaFinderView
+from src.views.pessoa_fisica_list_view import PessoaFisicaListView
+from src.views.pessoa_fisica_saldo_updater_view import PessoaFisicaSaldoUpdaterView
+from src.views.pessoa_fisica_statement_view import PessoaFisicaStatementView
+from src.views.pessoa_fisica_withdraw_view import PessoaFisicaWithdrawView
+
+repository = PessoaFisicaRepository(db_connection_handler)
+controller = PessoaFisicaController(repository)
+
+pessoa_fisica_list_view = PessoaFisicaListView(controller)
+pessoa_fisica_creator_view = PessoaFisicaCreatorView(controller)
+pessoa_fisica_finder_view = PessoaFisicaFinderView(controller)
+pessoa_fisica_saldo_updater_view = PessoaFisicaSaldoUpdaterView(controller)
+pessoa_fisica_statement_view = PessoaFisicaStatementView(controller)
+pessoa_fisica_withdraw_view = PessoaFisicaWithdrawView(controller)

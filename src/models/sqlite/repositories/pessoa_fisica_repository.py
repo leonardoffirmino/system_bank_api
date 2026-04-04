@@ -1,4 +1,4 @@
-from sqlalchemy.orm import NoResultFound
+from sqlalchemy.orm.exc import NoResultFound
 from src.models.sqlite.interfaces.pessoa_fisica_repository import PessoaFisicaRepositoryInterface
 from src.models.sqlite.entities.pessoa_fisica import PessoaFisicaTable
 
@@ -60,6 +60,43 @@ class PessoaFisicaRepository(PessoaFisicaRepositoryInterface):
                return person
             except Exception as exception:
                database.session.rollback()
+               raise exception
+
+      def sacar(self, client_id: int, valor: float) -> PessoaFisicaTable | None:
+         with self.__db_connection() as database:
+            try:
+               person = (database.session
+                        .query(PessoaFisicaTable)
+                        .filter(PessoaFisicaTable.id == client_id)
+                        .first())
+
+               if person is None:
+                  return None
+
+               person.sacar(valor)
+               database.session.commit()
+               database.session.refresh(person)
+               return person
+            except Exception as exception:
+               database.session.rollback()
+               raise exception
+
+      def extrato(self, client_id: int) -> dict | None:
+         with self.__db_connection() as database:
+            try:
+               person = (database.session
+                        .query(PessoaFisicaTable)
+                        .filter(PessoaFisicaTable.id == client_id)
+                        .first())
+
+               if person is None:
+                  return None
+
+               return {
+                  "account": person.extrato(),
+                  "transactions": [],
+               }
+            except Exception as exception:
                raise exception
 
       

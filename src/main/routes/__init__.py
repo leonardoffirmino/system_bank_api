@@ -1,0 +1,2 @@
+from .pessoa_fisica_routes import pessoa_fisica_route_bp
+from .pessoa_juridica_routes import pessoa_juridica_route_bp

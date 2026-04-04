@@ -1,12 +1,9 @@
-from abc import ABC, abstractmethod
+from typing import Protocol
 
 
-class Cliente(ABC):
-
-    @abstractmethod
+class Cliente(Protocol):
     def sacar(self, value: float):
-        pass
-    
-    @abstractmethod
+        ...
+
     def extrato(self):
-        pass
+        ...

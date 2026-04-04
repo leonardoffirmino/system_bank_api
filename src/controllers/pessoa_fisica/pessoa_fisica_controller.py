@@ -1,7 +1,8 @@
 from src.controllers.pessoa_fisica.interfaces.pessoa_fisica_controller_interface import PessoaFisicaControllerInterface
 from src.models.sqlite.interfaces.pessoa_fisica_repository import PessoaFisicaRepositoryInterface
-from src.models.sqlite.entities.pessoa_fisica import PessoaFisicaTable
 from typing import List, Any
+from src.errors.error_types.http_bad_request import HttpBadRequestError
+from src.errors.error_types.http_not_found import HttpNotFoundError
 
 
 class PessoaFisicaController(PessoaFisicaControllerInterface):
@@ -28,6 +29,16 @@ class PessoaFisicaController(PessoaFisicaControllerInterface):
             return self.__format_response({"person": None, "count": 0})
         return self.__format_response({"person": person, "count": 1})
 
+    def sacar(self, client_id: int, valor: float) -> dict | None:
+        person = self.__withdraw_action(client_id, valor)
+        if person is None:
+            return self.__format_response({"person": None, "count": 0})
+        return self.__format_response({"person": person, "count": 1})
+
+    def extrato(self, client_id: int) -> dict | None:
+        statement = self.__statement_action(client_id)
+        return self.__format_response({"statement": statement, "count": 1})
+
     def __list_people_action(self) -> List[dict]:
         people = self._repo.list_people()
         return [
@@ -46,13 +57,13 @@ class PessoaFisicaController(PessoaFisicaControllerInterface):
     def __create_person_action(self, renda_mensal: float, idade: int, nome_completo: str, celular: str, categoria: str, saldo: float) -> dict:
 
         if renda_mensal < 0:
-            raise ValueError("Renda mensal negativa")
+            raise HttpBadRequestError("Renda mensal negativa")
         if idade <= 0:
-            raise ValueError("Idade deve ser positiva")
+            raise HttpBadRequestError("Idade deve ser positiva")
         if not nome_completo or not isinstance(nome_completo, str):
-            raise ValueError("Nome completo deve ser uma string não vazia")
+            raise HttpBadRequestError("Nome completo deve ser uma string não vazia")
         if saldo < 0:
-            raise ValueError("Saldo deve ser não negativo")
+            raise HttpBadRequestError("Saldo deve ser não negativo")
 
         self._repo.create_person(renda_mensal, idade, nome_completo, celular, categoria, saldo)
   
@@ -72,10 +83,10 @@ class PessoaFisicaController(PessoaFisicaControllerInterface):
 
     def __get_person_action(self, client_id: int) -> dict | None:
         if client_id is None or not isinstance(client_id, int) or client_id <= 0:
-            raise ValueError("Não localizado: client_id deve ser um inteiro positivo")
+            raise HttpBadRequestError("client_id deve ser um inteiro positivo")
         p = self._repo.get_person(client_id)
         if p is None:
-            return None
+            raise HttpNotFoundError("Pessoa não encontrada")
         return {
             "id": p.id,
             "nome_completo": p.nome_completo,
@@ -88,18 +99,42 @@ class PessoaFisicaController(PessoaFisicaControllerInterface):
 
     def __update_saldo_action(self, client_id: int, saldo: float) -> dict | None:
         if client_id is None or not isinstance(client_id, int) or client_id <= 0:
-            raise ValueError("Não localizado: client_id deve ser um inteiro positivo")
+            raise HttpBadRequestError("client_id deve ser um inteiro positivo")
         if saldo is None or not isinstance(saldo, (int, float)):
-            raise ValueError("Saldo deve ser um número")
+            raise HttpBadRequestError("Saldo deve ser um número")
 
         person = self._repo.update_saldo(client_id, saldo)
         if person is None:
-            return None
+            raise HttpNotFoundError("Pessoa não encontrada")
         return {
             "id": person.id,
             "nome_completo": person.nome_completo,
             "saldo": person.saldo,
         }
+
+    def __withdraw_action(self, client_id: int, valor: float) -> dict | None:
+        if client_id is None or not isinstance(client_id, int) or client_id <= 0:
+            raise HttpBadRequestError("client_id deve ser um inteiro positivo")
+        if valor is None or not isinstance(valor, (int, float)):
+            raise HttpBadRequestError("valor deve ser um nÃºmero")
+
+        person = self._repo.sacar(client_id, valor)
+        if person is None:
+            raise HttpNotFoundError("Pessoa nÃ£o encontrada")
+        return {
+            "id": person.id,
+            "nome_completo": person.nome_completo,
+            "saldo": person.saldo,
+        }
+
+    def __statement_action(self, client_id: int) -> dict:
+        if client_id is None or not isinstance(client_id, int) or client_id <= 0:
+            raise HttpBadRequestError("client_id deve ser um inteiro positivo")
+
+        statement = self._repo.extrato(client_id)
+        if statement is None:
+            raise HttpNotFoundError("Pessoa nÃ£o encontrada")
+        return statement
 
     def __format_response(self, person_info: dict) -> dict[str, Any]:
         return {

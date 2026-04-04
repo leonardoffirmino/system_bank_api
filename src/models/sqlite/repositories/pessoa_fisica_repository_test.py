@@ -22,6 +22,8 @@ class MockConnection:
 
     def __enter__(self): return self
     def __exit__(self, exc_type, exc_val, exc_tb): pass
+    def __call__(self):
+        return self
 
 
 class MockConnectionNoResult:
@@ -34,6 +36,8 @@ class MockConnectionNoResult:
 
     def __enter__(self): return self
     def __exit__(self, exc_type, exc_val, exc_tb): pass
+    def __call__(self):
+        return self
 
 
 def test_list_people():

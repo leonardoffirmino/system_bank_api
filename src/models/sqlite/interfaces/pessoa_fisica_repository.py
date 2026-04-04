@@ -18,3 +18,11 @@ class PessoaFisicaRepositoryInterface(ABC):
     @abstractmethod
     def update_saldo(self, client_id: int, saldo: float) -> PessoaFisicaTable | None:
         pass
+
+    @abstractmethod
+    def sacar(self, client_id: int, valor: float) -> PessoaFisicaTable | None:
+        pass
+
+    @abstractmethod
+    def extrato(self, client_id: int) -> dict | None:
+        pass
