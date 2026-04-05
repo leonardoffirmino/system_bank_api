@@ -9,13 +9,14 @@ CREATE TABLE IF NOT EXISTS pessoa_fisica (
     saldo REAL
 );
 
-CREATE TABLE IF NOT EXISTS pessoas_juridica (
+CREATE TABLE IF NOT EXISTS pessoa_juridica (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     razao_social TEXT NOT NULL,
     nome_fantasia TEXT,
     cnpj TEXT NOT NULL UNIQUE,
     email TEXT,
-    limite_saque REAL NOT NULL
+    limit_saque REAL NOT NULL,
+    saldo REAL NOT NULL DEFAULT 0.0
 );
 
 CREATE TABLE IF NOT EXISTS transacoes (
@@ -84,47 +85,53 @@ VALUES (
     );
 
 INSERT INTO
-    pessoas_juridica (
+    pessoa_juridica (
         razao_social,
         nome_fantasia,
         cnpj,
         email,
-        limite_saque
+        limit_saque,
+        saldo
     )
 VALUES (
         'Tech Solutions Brasil LTDA',
         'Tech Solutions',
         '11222333000101',
         'contato@techsolutions.com',
-        15000.00
+        15000.00,
+        0.0
     ),
     (
         'Alimentos Prime Distribuidora LTDA',
         'Prime Distribuidora',
         '22333444000102',
         'financeiro@primealimentos.com',
-        25000.00
+        25000.00,
+        0.0
     ),
     (
         'Construtora Horizonte S.A.',
         'Horizonte Engenharia',
         '33444555000103',
         'contato@horizonteengenharia.com',
-        50000.00
+        50000.00,
+        0.0
     ),
     (
         'Marketing Digital Impacto LTDA',
         'Impacto MKT',
         '44555666000104',
         'atendimento@impactomkt.com',
-        12000.00
+        12000.00,
+        0.0
     ),
     (
-        'Transportes Rápido Sul LTDA',
-        'Rápido Sul Logística',
+        'Transportes Rapido Sul LTDA',
+        'Rapido Sul Logistica',
         '55666777000105',
         'financeiro@rapidosul.com',
-        30000.00
+        30000.00,
+        0.0
     );
 
 INSERT INTO

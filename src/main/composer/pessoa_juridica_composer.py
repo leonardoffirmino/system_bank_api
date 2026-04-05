@@ -8,7 +8,7 @@ from src.views.pessoa_juridica_saldo_updater_view import PessoaJuridicaSaldoUpda
 from src.views.pessoa_juridica_statement_view import PessoaJuridicaStatementView
 from src.views.pessoa_juridica_withdraw_view import PessoaJuridicaWithdrawView
 
-repository = PessoaJuridicaRepository(db_connection_handler)
+repository = PessoaJuridicaRepository(lambda: db_connection_handler)
 controller = PessoaJuridicaController(repository)
 
 pessoa_juridica_list_view = PessoaJuridicaListView(controller)

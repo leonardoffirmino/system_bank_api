@@ -8,7 +8,7 @@ from src.views.pessoa_fisica_saldo_updater_view import PessoaFisicaSaldoUpdaterV
 from src.views.pessoa_fisica_statement_view import PessoaFisicaStatementView
 from src.views.pessoa_fisica_withdraw_view import PessoaFisicaWithdrawView
 
-repository = PessoaFisicaRepository(db_connection_handler)
+repository = PessoaFisicaRepository(lambda: db_connection_handler)
 controller = PessoaFisicaController(repository)
 
 pessoa_fisica_list_view = PessoaFisicaListView(controller)
